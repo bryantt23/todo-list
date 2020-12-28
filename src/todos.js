@@ -2,7 +2,9 @@ import { v1 as uuidv1 } from 'uuid';
 
 let todosObj = {};
 
-const todosArray = [
+let todosArr;
+
+const todosArrayBackup = [
   { title: 'code', category: 'mental', description: 'the odin project' },
   { title: 'climb', category: 'physical', isComplete: true },
   { title: 'eat', category: 'physical' },
@@ -18,7 +20,10 @@ const addTodo = todo => {
   todosObj[id] = todo;
 };
 
-todosArray.forEach(todo => createTodo(todo));
+export const editTodo = todo => {
+  const { id, description, title, category, isComplete } = todo;
+  todosObj[id] = { description, title, category, isComplete };
+};
 
 //todo
 export function createTodo(todo) {
@@ -48,9 +53,26 @@ export function createTodo(todo) {
 }
 
 export const getTodos = () => {
+  updateLocalStorage();
   return todosObj;
 };
 
 export const deleteTodo = id => {
   delete todosObj[id];
 };
+
+function updateLocalStorage() {
+  localStorage.setItem('todos', JSON.stringify(todosObj));
+}
+
+function init() {
+  const localStorageTodos = localStorage.getItem('todos');
+  if (localStorageTodos) {
+    todosObj = JSON.parse(localStorageTodos);
+  } else {
+    todosArr = todosArrayBackup;
+    todosArr.forEach(todo => createTodo(todo));
+  }
+}
+
+init();
