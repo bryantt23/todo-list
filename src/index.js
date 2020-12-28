@@ -1,6 +1,9 @@
 import * as todo from './todos.js';
 
 const contentId = document.querySelector('#content');
+const container = document.createElement('div');
+container.id = 'container';
+
 let categorySelected = 'all';
 let todosObj = {};
 
@@ -10,9 +13,9 @@ function updateTodosObject() {
 
 //view
 function renderTodos() {
-  if (contentId.hasChildNodes()) {
-    while (contentId.firstChild) {
-      contentId.removeChild(contentId.firstChild);
+  if (container.hasChildNodes()) {
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
     }
   }
 
@@ -22,7 +25,7 @@ function renderTodos() {
     categorySelected.charAt(0).toUpperCase() +
     categorySelected.slice(1);
 
-  contentId.appendChild(h3);
+  container.appendChild(h3);
 
   for (const [key, value] of Object.entries(todosObj)) {
     const { title, isComplete, category, description } = value;
@@ -36,9 +39,10 @@ function renderTodos() {
     deleteButton.textContent = 'Delete this todo';
     deleteButton.id = key;
     deleteButton.setAttribute('class', 'delete-button');
-    contentId.appendChild(p);
-    contentId.appendChild(deleteButton);
+    container.appendChild(p);
+    container.appendChild(deleteButton);
   }
+  contentId.appendChild(container);
   addEventListeners();
 }
 
@@ -65,7 +69,7 @@ function generateCategoryDropdown() {
   label.innerHTML = 'Choose your category: ';
   label.htmlFor = 'categories';
 
-  document.getElementById('container').appendChild(label).appendChild(select);
+  contentId.appendChild(label).appendChild(select);
 }
 
 function addEventListeners() {
