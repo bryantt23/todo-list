@@ -1,11 +1,14 @@
 import * as todo from './todos.js';
 
-// let categorySelected='all'
+const contentId = document.querySelector('#content');
+let todosObj = {};
+
+function updateTodosObject() {
+  todosObj = todo.getTodos();
+}
 
 //view
-function renderTodos(todos, categorySelected = 'all') {
-  const contentId = document.querySelector('#content');
-
+function renderTodos(categorySelected = 'all') {
   if (contentId.hasChildNodes()) {
     while (contentId.firstChild) {
       contentId.removeChild(contentId.firstChild);
@@ -17,7 +20,7 @@ function renderTodos(todos, categorySelected = 'all') {
 
   contentId.appendChild(h3);
 
-  for (const [key, value] of Object.entries(todos)) {
+  for (const [key, value] of Object.entries(todosObj)) {
     const { title, isComplete, category, description } = value;
     if (categorySelected !== 'all') {
       if (categorySelected !== category) continue;
@@ -37,20 +40,45 @@ function renderTodos(todos, categorySelected = 'all') {
 
 function addEventListeners() {
   const deleteButtons = document.querySelectorAll('.delete-button');
-  console.log(deleteButtons);
 
   deleteButtons.forEach(deleteButton =>
     deleteButton.addEventListener('click', e => {
       const id = e.target.id;
-      console.log(id);
       todo.deleteTodo(id);
-      console.log(todo.getTodos());
-      renderTodos(todo.getTodos());
+      updateTodosObject();
+      renderTodos();
     })
   );
 }
 
-let todos = todo.getTodos();
+// https://www.techiedelight.com/dynamically-create-drop-down-list-javascript/
+function generateCategoryDropdown() {
+  const todos = Object.values(todosObj);
+  // https://stackoverflow.com/a/35092559
+  let categories = [...new Set(todos.map(todo => todo.category))];
+
+  categories.unshift('All');
+
+  const select = document.createElement('select');
+  select.name = 'category';
+  select.id = 'category';
+
+  for (const category of categories) {
+    const option = document.createElement('option');
+    option.value = category;
+    option.text = category.charAt(0).toUpperCase() + category.slice(1);
+    select.appendChild(option);
+  }
+
+  const label = document.createElement('label');
+  label.innerHTML = 'Choose your category: ';
+  label.htmlFor = 'categories';
+
+  document.getElementById('container').appendChild(label).appendChild(select);
+}
+
+updateTodosObject();
+generateCategoryDropdown();
 // console.log(Object.entries(todos));
 // renderTodos(Object.entries(todos));
-renderTodos(todos, 'all');
+renderTodos('all');
