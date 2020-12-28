@@ -1,6 +1,7 @@
 import * as todo from './todos.js';
 
 const contentId = document.querySelector('#content');
+let categorySelected = 'all';
 let todosObj = {};
 
 function updateTodosObject() {
@@ -8,7 +9,7 @@ function updateTodosObject() {
 }
 
 //view
-function renderTodos(categorySelected = 'all') {
+function renderTodos() {
   if (contentId.hasChildNodes()) {
     while (contentId.firstChild) {
       contentId.removeChild(contentId.firstChild);
@@ -83,9 +84,9 @@ function addEventListeners() {
   select.addEventListener('change', e => {
     // const result = document.querySelector('.result');
     console.log(e.target.value);
-    const category = e.target.value;
+    categorySelected = e.target.value;
     updateTodosObject();
-    renderTodos(category);
+    renderTodos();
   });
 }
 
@@ -93,4 +94,4 @@ updateTodosObject();
 generateCategoryDropdown();
 // console.log(Object.entries(todos));
 // renderTodos(Object.entries(todos));
-renderTodos('all');
+renderTodos();
