@@ -5,11 +5,12 @@ const contentId = document.querySelector('#content');
 const todosContainer = document.createElement('div');
 todosContainer.id = 'todosContainer';
 
-let categorySelected = 'all';
+let categorySelected = '';
 let todosObj = {};
 
 function updateTodosObject() {
   todosObj = todo.getTodos();
+  console.log(todosObj);
 }
 
 //view
@@ -36,6 +37,7 @@ function renderTodos() {
     const p = document.createElement('p');
     p.id = key;
     p.textContent = `Title: ${title}, Category: ${category}, Description: ${description}, Is complete: ${isComplete}`;
+
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete this todo';
     deleteButton.id = key;
@@ -48,12 +50,14 @@ function renderTodos() {
 }
 
 // https://www.techiedelight.com/dynamically-create-drop-down-list-javascript/
-function generateCategoryDropdown() {
+function generateCategoryDropdown(addingTodo = false) {
   const todos = Object.values(todosObj);
   // https://stackoverflow.com/a/35092559
   let categories = [...new Set(todos.map(todo => todo.category))];
 
-  categories.unshift('all');
+  if (!addingTodo) {
+    categories.unshift('all');
+  }
 
   const select = document.createElement('select');
   select.name = 'category';
@@ -80,6 +84,14 @@ function generateAddTodoButton() {
   contentId.appendChild(addTodoButton);
 }
 
+function clearTodoForm() {
+  if (contentId.hasChildNodes()) {
+    while (contentId.firstChild) {
+      contentId.removeChild(contentId.firstChild);
+    }
+  }
+}
+
 function addTodoForm() {
   if (contentId.hasChildNodes()) {
     while (contentId.firstChild) {
@@ -100,7 +112,7 @@ function addTodoForm() {
   form.appendChild(input);
   form.appendChild(document.createElement('br'));
 
-  generateCategoryDropdown();
+  generateCategoryDropdown(true);
 
   form.appendChild(label);
   form.appendChild(input);
@@ -121,7 +133,7 @@ function addTodoForm() {
   label = document.createElement('label');
   label.textContent = 'Is complete';
   input = document.createElement('input');
-  input.type = 'text';
+  input.type = 'checkbox';
   input.id = 'is-complete';
 
   form.appendChild(label);
@@ -141,6 +153,8 @@ function addTodoForm() {
   contentId.appendChild(form);
 
   addToDoFormEventListeners();
+  const select = document.querySelector('#category');
+  categorySelected = select.value;
 }
 
 function addEventListeners() {
@@ -197,10 +211,17 @@ function addToDoFormEventListeners() {
   addTodoButton.addEventListener('click', e => {
     e.preventDefault();
     console.log(categorySelected);
+    const title = document.querySelector('#title').value;
+    if (title === '') return;
     const description = document.querySelector('#description').value;
 
-    if (description === '') return;
+    const isComplete = document.querySelector('#is-complete').checked;
+    console.log(title + description + isComplete);
+    let category = categorySelected;
+    todo.createTodo({ title, isComplete, category, description });
 
+    clearTodoForm();
+    showAllTodos();
     // const author = document.querySelector('#author').value;
     // if (title !== '' && author !== '') {
     //   addBookToLibrary(new Book(title, author));
@@ -209,17 +230,20 @@ function addToDoFormEventListeners() {
   });
 
   const cancelAddingTodo = document.querySelector('#cancel-adding-new-todo');
-  cancelAddingTodo.addEventListener('click', () => {
-    updateTodosObject();
-    generateCategoryDropdown();
-    generateAddTodoButton();
+  cancelAddingTodo.addEventListener('click', e => {
+    e.preventDefault();
+    clearTodoForm();
+    showAllTodos();
   });
 }
 
-updateTodosObject();
-generateCategoryDropdown();
-generateAddTodoButton();
-// console.log(Object.entries(todos));
-// renderTodos(Object.entries(todos));
-renderTodos();
-addTodoForm();
+function showAllTodos() {
+  updateTodosObject();
+  generateCategoryDropdown();
+  generateAddTodoButton();
+  renderTodos();
+}
+
+showAllTodos();
+
+// addTodoForm();
