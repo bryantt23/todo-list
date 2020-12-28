@@ -97,7 +97,7 @@ function clearTodoForm() {
   }
 }
 
-function addTodoForm() {
+function addTodoForm(editingId) {
   if (contentId.hasChildNodes()) {
     while (contentId.firstChild) {
       contentId.removeChild(contentId.firstChild);
@@ -157,7 +157,7 @@ function addTodoForm() {
 
   contentId.appendChild(form);
 
-  addToDoFormEventListeners();
+  addToDoFormEventListeners(editingId);
   const select = document.querySelector('#category');
   categorySelected = select.value;
 }
@@ -181,7 +181,7 @@ function addEventListeners() {
       const id = e.target.id;
       const todoToEdit = todosObj[id];
       const { title, description, category, isComplete } = todoToEdit;
-      addTodoForm();
+      addTodoForm(id);
 
       document.querySelector('#title').value = title;
       document.querySelector('#description').value = description;
@@ -211,7 +211,7 @@ function addEventListeners() {
   });
 }
 
-function addToDoFormEventListeners() {
+function addToDoFormEventListeners(editingId) {
   const select = document.querySelector('#category');
   select.addEventListener('change', e => {
     categorySelected = e.target.value;
@@ -228,7 +228,12 @@ function addToDoFormEventListeners() {
     const isComplete = document.querySelector('#is-complete').checked;
     console.log(title + description + isComplete);
     let category = categorySelected;
-    todo.createTodo({ title, isComplete, category, description });
+    if (editingId) {
+      let id = editingId;
+      todo.editTodo({ id, description, title, category, isComplete });
+    } else {
+      todo.createTodo({ title, isComplete, category, description });
+    }
     categorySelected = 'all';
     clearTodoForm();
     showAllTodos();
