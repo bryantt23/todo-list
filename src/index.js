@@ -1,8 +1,9 @@
 import * as todo from './todos.js';
 
+// const addTodoForm = document.querySelector('#add-todo-form');
 const contentId = document.querySelector('#content');
-const container = document.createElement('div');
-container.id = 'container';
+const todosContainer = document.createElement('div');
+todosContainer.id = 'todosContainer';
 
 let categorySelected = 'all';
 let todosObj = {};
@@ -13,9 +14,9 @@ function updateTodosObject() {
 
 //view
 function renderTodos() {
-  if (container.hasChildNodes()) {
-    while (container.firstChild) {
-      container.removeChild(container.firstChild);
+  if (todosContainer.hasChildNodes()) {
+    while (todosContainer.firstChild) {
+      todosContainer.removeChild(todosContainer.firstChild);
     }
   }
 
@@ -25,7 +26,7 @@ function renderTodos() {
     categorySelected.charAt(0).toUpperCase() +
     categorySelected.slice(1);
 
-  container.appendChild(h3);
+  todosContainer.appendChild(h3);
 
   for (const [key, value] of Object.entries(todosObj)) {
     const { title, isComplete, category, description } = value;
@@ -39,10 +40,10 @@ function renderTodos() {
     deleteButton.textContent = 'Delete this todo';
     deleteButton.id = key;
     deleteButton.setAttribute('class', 'delete-button');
-    container.appendChild(p);
-    container.appendChild(deleteButton);
+    todosContainer.appendChild(p);
+    todosContainer.appendChild(deleteButton);
   }
-  contentId.appendChild(container);
+  contentId.appendChild(todosContainer);
   addEventListeners();
 }
 
@@ -72,6 +73,92 @@ function generateCategoryDropdown() {
   contentId.appendChild(label).appendChild(select);
 }
 
+function generateAddTodoButton() {
+  const addTodoButton = document.createElement('button');
+  addTodoButton.textContent = 'Add a todo';
+  addTodoButton.id = 'add-a-todo';
+  contentId.appendChild(addTodoButton);
+}
+
+function addTodoForm() {
+  if (contentId.hasChildNodes()) {
+    while (contentId.firstChild) {
+      contentId.removeChild(contentId.firstChild);
+    }
+  }
+
+  const br = document.createElement('br');
+  const form = document.createElement('form');
+  form.id = 'add-todo-form';
+
+  let label = document.createElement('label');
+  label.textContent = 'Title';
+  let input = document.createElement('input');
+  input.type = 'text';
+  input.id = 'title';
+  input.appendChild(br);
+  form.appendChild(label);
+  form.appendChild(input);
+
+  label = document.createElement('label');
+  label.textContent = 'Category';
+  input = document.createElement('input');
+  input.type = 'text';
+  input.id = 'category';
+  input.appendChild(br);
+  form.appendChild(label);
+  form.appendChild(input);
+
+  label = document.createElement('label');
+  label.textContent = 'Description';
+  input = document.createElement('input');
+  input.type = 'text';
+  input.id = 'description';
+  input.appendChild(br);
+  form.appendChild(label);
+  form.appendChild(input);
+
+  contentId.appendChild(form);
+
+  label = document.createElement('label');
+  label.textContent = 'Is complete';
+  input = document.createElement('input');
+  input.type = 'text';
+  input.id = 'is-complete';
+  input.appendChild(br);
+  form.appendChild(label);
+  form.appendChild(input);
+
+  const addTodoButton = document.createElement('button');
+  addTodoButton.textContent = 'Add todo';
+  addTodoButton.id = 'add-todo';
+  form.appendChild(addTodoButton);
+
+  const cancelAddingTodoButton = document.createElement('button');
+  cancelAddingTodoButton.textContent = 'Cancel adding new todo';
+  cancelAddingTodoButton.id = 'cancel-adding-new-todo';
+  form.appendChild(cancelAddingTodoButton);
+
+  contentId.appendChild(form);
+
+  // <form style='visibility: hidden' id='add-todo-form'>
+  //   <label>Title</label>
+  //   <input type='text' id='title' />
+  //   <br />
+  //   <label>Category</label>
+  //   <input type='text' id='category' />
+  //   <br />
+  //   <label>Description</label>
+  //   <input type='text' id='description' />
+  //   <br />
+  //   <label>Is complete</label>
+  //   <input type='text' id='is-complete' />
+  //   <br />
+  //   <button id='add-todo'>Add Todo</button>
+  //   <button id='cancel-adding-new-todo'>Cancel adding new todo</button>
+  // </form>;
+}
+
 function addEventListeners() {
   const deleteButtons = document.querySelectorAll('.delete-button');
 
@@ -92,10 +179,19 @@ function addEventListeners() {
     updateTodosObject();
     renderTodos();
   });
+
+  const addTodoButton = document.querySelector('#add-a-todo');
+  addTodoButton.addEventListener('click', () => {
+    // contentId.style = 'visibility:hidden';
+    // todosContainer.style = 'visibility:hidden';
+    // addTodoForm.style = 'visibility:visible';
+    addTodoForm();
+  });
 }
 
 updateTodosObject();
 generateCategoryDropdown();
+generateAddTodoButton();
 // console.log(Object.entries(todos));
 // renderTodos(Object.entries(todos));
 renderTodos();
