@@ -2,7 +2,7 @@ import { v1 as uuidv1 } from 'uuid';
 
 let todosObj = {};
 
-let todosArr;
+const categories = ['physical', 'mental', 'social', 'misc'];
 
 const todosArrayBackup = [
   { title: 'code', category: 'mental', description: 'the odin project' },
@@ -15,6 +15,10 @@ const todosArrayBackup = [
   { title: 'sleep', description: 'in bed' }
 ];
 
+export const getCategories = () => {
+  return categories;
+};
+
 const addTodo = todo => {
   const id = uuidv1();
   todosObj[id] = todo;
@@ -25,9 +29,7 @@ export const editTodo = todo => {
   todosObj[id] = { description, title, category, isComplete };
 };
 
-//todo
 export function createTodo(todo) {
-  console.log(`createTodo ${JSON.stringify(todo)}`);
   const {
     title,
     isComplete = false,
@@ -70,7 +72,7 @@ function init() {
   if (localStorageTodos) {
     todosObj = JSON.parse(localStorageTodos);
   } else {
-    todosArr = todosArrayBackup;
+    const todosArr = todosArrayBackup;
     todosArr.forEach(todo => createTodo(todo));
   }
 }

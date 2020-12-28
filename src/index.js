@@ -9,16 +9,19 @@ let todosObj = {};
 
 function updateTodosObject() {
   todosObj = todo.getTodos();
-  console.log(todosObj);
+}
+
+function clearChildrenNodes(parentNode) {
+  if (parentNode.hasChildNodes()) {
+    while (parentNode.firstChild) {
+      parentNode.removeChild(parentNode.firstChild);
+    }
+  }
 }
 
 //view
 function renderTodos() {
-  if (todosContainer.hasChildNodes()) {
-    while (todosContainer.firstChild) {
-      todosContainer.removeChild(todosContainer.firstChild);
-    }
-  }
+  clearChildrenNodes(todosContainer);
 
   const h3 = document.createElement('h3');
   h3.textContent =
@@ -56,9 +59,8 @@ function renderTodos() {
 
 // https://www.techiedelight.com/dynamically-create-drop-down-list-javascript/
 function generateCategoryDropdown(addingTodo = false) {
-  const todos = Object.values(todosObj);
   // https://stackoverflow.com/a/35092559
-  let categories = [...new Set(todos.map(todo => todo.category))];
+  let categories = todo.getCategories();
 
   if (!addingTodo) {
     categories.unshift('all');
@@ -90,19 +92,11 @@ function generateAddTodoButton() {
 }
 
 function clearTodoForm() {
-  if (contentId.hasChildNodes()) {
-    while (contentId.firstChild) {
-      contentId.removeChild(contentId.firstChild);
-    }
-  }
+  clearChildrenNodes(contentId);
 }
 
 function addTodoForm(editingId) {
-  if (contentId.hasChildNodes()) {
-    while (contentId.firstChild) {
-      contentId.removeChild(contentId.firstChild);
-    }
-  }
+  clearChildrenNodes(contentId);
 
   const form = document.createElement('form');
   form.id = 'add-todo-form';
@@ -256,5 +250,3 @@ function showAllTodos() {
 }
 
 showAllTodos();
-
-// addTodoForm();
