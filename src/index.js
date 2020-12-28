@@ -16,7 +16,10 @@ function renderTodos(categorySelected = 'all') {
   }
 
   const h3 = document.createElement('h3');
-  h3.textContent = 'Category selected is: ' + categorySelected;
+  h3.textContent =
+    'Category selected is: ' +
+    categorySelected.charAt(0).toUpperCase() +
+    categorySelected.slice(1);
 
   contentId.appendChild(h3);
 
@@ -38,26 +41,13 @@ function renderTodos(categorySelected = 'all') {
   addEventListeners();
 }
 
-function addEventListeners() {
-  const deleteButtons = document.querySelectorAll('.delete-button');
-
-  deleteButtons.forEach(deleteButton =>
-    deleteButton.addEventListener('click', e => {
-      const id = e.target.id;
-      todo.deleteTodo(id);
-      updateTodosObject();
-      renderTodos();
-    })
-  );
-}
-
 // https://www.techiedelight.com/dynamically-create-drop-down-list-javascript/
 function generateCategoryDropdown() {
   const todos = Object.values(todosObj);
   // https://stackoverflow.com/a/35092559
   let categories = [...new Set(todos.map(todo => todo.category))];
 
-  categories.unshift('All');
+  categories.unshift('all');
 
   const select = document.createElement('select');
   select.name = 'category';
@@ -75,6 +65,28 @@ function generateCategoryDropdown() {
   label.htmlFor = 'categories';
 
   document.getElementById('container').appendChild(label).appendChild(select);
+}
+
+function addEventListeners() {
+  const deleteButtons = document.querySelectorAll('.delete-button');
+
+  deleteButtons.forEach(deleteButton =>
+    deleteButton.addEventListener('click', e => {
+      const id = e.target.id;
+      todo.deleteTodo(id);
+      updateTodosObject();
+      renderTodos();
+    })
+  );
+
+  const select = document.querySelector('#category');
+  select.addEventListener('change', e => {
+    // const result = document.querySelector('.result');
+    console.log(e.target.value);
+    const category = e.target.value;
+    updateTodosObject();
+    renderTodos(category);
+  });
 }
 
 updateTodosObject();
