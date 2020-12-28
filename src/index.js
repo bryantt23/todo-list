@@ -87,7 +87,7 @@ function addTodoForm() {
     }
   }
 
-  const br = document.createElement('br');
+  const div = document.createElement('div');
   const form = document.createElement('form');
   form.id = 'add-todo-form';
 
@@ -96,27 +96,30 @@ function addTodoForm() {
   let input = document.createElement('input');
   input.type = 'text';
   input.id = 'title';
-  input.appendChild(br);
+
   form.appendChild(label);
   form.appendChild(input);
+  form.appendChild(document.createElement('br'));
 
   label = document.createElement('label');
   label.textContent = 'Category';
   input = document.createElement('input');
   input.type = 'text';
   input.id = 'category';
-  input.appendChild(br);
+
   form.appendChild(label);
   form.appendChild(input);
+  form.appendChild(document.createElement('br'));
 
   label = document.createElement('label');
   label.textContent = 'Description';
   input = document.createElement('input');
   input.type = 'text';
   input.id = 'description';
-  input.appendChild(br);
+
   form.appendChild(label);
   form.appendChild(input);
+  form.appendChild(document.createElement('br'));
 
   contentId.appendChild(form);
 
@@ -125,9 +128,10 @@ function addTodoForm() {
   input = document.createElement('input');
   input.type = 'text';
   input.id = 'is-complete';
-  input.appendChild(br);
+
   form.appendChild(label);
   form.appendChild(input);
+  form.appendChild(document.createElement('br'));
 
   const addTodoButton = document.createElement('button');
   addTodoButton.textContent = 'Add todo';
@@ -195,3 +199,4 @@ generateAddTodoButton();
 // console.log(Object.entries(todos));
 // renderTodos(Object.entries(todos));
 renderTodos();
+addTodoForm();
