@@ -1,14 +1,14 @@
 import { v1 as uuidv1 } from 'uuid';
 
-const todosObj = {};
+let todosObj = {};
 
 const todosArray = [
   { title: 'climb', category: 'physical', isComplete: true },
   { title: 'eat', category: 'physical' },
-  { title: 'code', category: 'mental' },
+  { title: 'code', category: 'mental', description: 'the odin project' },
   { title: 'rest', category: 'physical' },
   { title: 'hang with friends', category: 'social' },
-  { title: 'watch Youtube' },
+  { title: 'watch Youtube', description: 'watch dog videos' },
   { title: 'meditate' },
   { title: 'sleep', description: 'in bed' }
 ];
@@ -22,7 +22,12 @@ const addTodo = todo => {
 
 //todo
 export function createTodo(todo) {
-  const { title, isComplete = false, category = 'misc' } = todo;
+  const {
+    title,
+    isComplete = false,
+    category = 'misc',
+    description = 'Add description later'
+  } = todo;
 
   //TODO: maybe send message or just do nothing
   if (!title) {
@@ -32,7 +37,8 @@ export function createTodo(todo) {
   const normalizedTodo = {
     title,
     isComplete,
-    category
+    category,
+    description
   };
 
   addTodo(normalizedTodo);
@@ -42,4 +48,8 @@ export function createTodo(todo) {
 
 export const getTodos = () => {
   return todosObj;
+};
+
+export const deleteTodo = id => {
+  delete todosObj[id];
 };

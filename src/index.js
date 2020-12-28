@@ -1,5 +1,7 @@
 import * as todo from './todos.js';
 
+// let categorySelected='all'
+
 //view
 function renderTodos(todos, categorySelected = 'all') {
   const contentId = document.querySelector('#content');
@@ -10,41 +12,45 @@ function renderTodos(todos, categorySelected = 'all') {
     }
   }
 
+  const h3 = document.createElement('h3');
+  h3.textContent = 'Category selected is: ' + categorySelected;
+
+  contentId.appendChild(h3);
+
   for (const [key, value] of Object.entries(todos)) {
-    const { title, isComplete, category } = value;
+    const { title, isComplete, category, description } = value;
     if (categorySelected !== 'all') {
       if (categorySelected !== category) continue;
     }
     const p = document.createElement('p');
     p.id = key;
-    p.textContent = `Title: ${title}, Category: ${category}, Is complete: ${isComplete}`;
+    p.textContent = `Title: ${title}, Category: ${category}, Description: ${description}, Is complete: ${isComplete}`;
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete this todo';
+    deleteButton.id = key;
+    deleteButton.setAttribute('class', 'delete-button');
     contentId.appendChild(p);
+    contentId.appendChild(deleteButton);
   }
-
-  //TODO: display category
-  // todos.forEach(todo => {
-  //   const { title, description, dueDate, category } = todo;
-  //   const p = document.createElement('p');
-  //   p.id = todo.id;
-  //   p.textContent = `Title: ${title}, Description: ${description}, Due Date: ${dueDate}, Category: ${category}`;
-  //   contentId.appendChild(p);
-  // });
+  addEventListeners();
 }
 
-/*
-//view? or view model? controller?
-function renderTodosInACategory(category) {
-  const todosInACategory = todos.filter(todo => todo.category === category);
-  // console.log(todosInACategory);
-  renderTodos(todosInACategory, category);
+function addEventListeners() {
+  const deleteButtons = document.querySelectorAll('.delete-button');
+  console.log(deleteButtons);
+
+  deleteButtons.forEach(deleteButton =>
+    deleteButton.addEventListener('click', e => {
+      const id = e.target.id;
+      console.log(id);
+      todo.deleteTodo(id);
+      console.log(todo.getTodos());
+      renderTodos(todo.getTodos());
+    })
+  );
 }
-// renderTodosInACategory('misc');
-// renderTodosInACategory('physical');
-// renderTodosInACategory('mental');
 
-*/
-
-const todos = todo.getTodos();
-console.log(Object.entries(todos));
+let todos = todo.getTodos();
+// console.log(Object.entries(todos));
 // renderTodos(Object.entries(todos));
-renderTodos(todos, 'mental');
+renderTodos(todos, 'all');
