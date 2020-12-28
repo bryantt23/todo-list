@@ -1,8 +1,7 @@
 import * as todo from './todos.js';
 
 //view
-function renderTodos(todos, category = 'All') {
-  // console.log(Object.entries(todos));
+function renderTodos(todos, categorySelected = 'all') {
   const contentId = document.querySelector('#content');
 
   if (contentId.hasChildNodes()) {
@@ -13,6 +12,9 @@ function renderTodos(todos, category = 'All') {
 
   for (const [key, value] of Object.entries(todos)) {
     const { title, isComplete, category } = value;
+    if (categorySelected !== 'all') {
+      if (categorySelected !== category) continue;
+    }
     const p = document.createElement('p');
     p.id = key;
     p.textContent = `Title: ${title}, Category: ${category}, Is complete: ${isComplete}`;
@@ -45,4 +47,4 @@ function renderTodosInACategory(category) {
 const todos = todo.getTodos();
 console.log(Object.entries(todos));
 // renderTodos(Object.entries(todos));
-renderTodos(todos);
+renderTodos(todos, 'mental');
