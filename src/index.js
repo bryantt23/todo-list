@@ -87,7 +87,6 @@ function addTodoForm() {
     }
   }
 
-  const div = document.createElement('div');
   const form = document.createElement('form');
   form.id = 'add-todo-form';
 
@@ -101,11 +100,7 @@ function addTodoForm() {
   form.appendChild(input);
   form.appendChild(document.createElement('br'));
 
-  label = document.createElement('label');
-  label.textContent = 'Category';
-  input = document.createElement('input');
-  input.type = 'text';
-  input.id = 'category';
+  generateCategoryDropdown();
 
   form.appendChild(label);
   form.appendChild(input);
@@ -145,22 +140,7 @@ function addTodoForm() {
 
   contentId.appendChild(form);
 
-  // <form style='visibility: hidden' id='add-todo-form'>
-  //   <label>Title</label>
-  //   <input type='text' id='title' />
-  //   <br />
-  //   <label>Category</label>
-  //   <input type='text' id='category' />
-  //   <br />
-  //   <label>Description</label>
-  //   <input type='text' id='description' />
-  //   <br />
-  //   <label>Is complete</label>
-  //   <input type='text' id='is-complete' />
-  //   <br />
-  //   <button id='add-todo'>Add Todo</button>
-  //   <button id='cancel-adding-new-todo'>Cancel adding new todo</button>
-  // </form>;
+  addToDoFormEventListeners();
 }
 
 function addEventListeners() {
@@ -175,6 +155,7 @@ function addEventListeners() {
     })
   );
 
+  // changeDropdownSelection([() => updateTodosObject, () => renderTodos]);
   const select = document.querySelector('#category');
   select.addEventListener('change', e => {
     // const result = document.querySelector('.result');
@@ -190,6 +171,48 @@ function addEventListeners() {
     // todosContainer.style = 'visibility:hidden';
     // addTodoForm.style = 'visibility:visible';
     addTodoForm();
+  });
+}
+
+// function changeDropdownSelection(callbackFunctions) {
+//   const select = document.querySelector('#category');
+//   select.addEventListener('change', e => {
+//     categorySelected = e.target.value;
+//   });
+//   console.log(callbackFunctions);
+//   for (const fn of callbackFunctions) {
+//     fn();
+//   }
+// }
+
+function addToDoFormEventListeners() {
+  const select = document.querySelector('#category');
+  select.addEventListener('change', e => {
+    categorySelected = e.target.value;
+  });
+
+  // changeDropdownSelection();
+
+  const addTodoButton = document.querySelector('#add-todo');
+  addTodoButton.addEventListener('click', e => {
+    e.preventDefault();
+    console.log(categorySelected);
+    const description = document.querySelector('#description').value;
+
+    if (description === '') return;
+
+    // const author = document.querySelector('#author').value;
+    // if (title !== '' && author !== '') {
+    //   addBookToLibrary(new Book(title, author));
+    //   showBooksOnPage();
+    // }
+  });
+
+  const cancelAddingTodo = document.querySelector('#cancel-adding-new-todo');
+  cancelAddingTodo.addEventListener('click', () => {
+    updateTodosObject();
+    generateCategoryDropdown();
+    generateAddTodoButton();
   });
 }
 
