@@ -19,7 +19,6 @@ function clearChildrenNodes(parentNode) {
   }
 }
 
-//view
 function renderTodos() {
   clearChildrenNodes(todosContainer);
 
@@ -59,7 +58,6 @@ function renderTodos() {
 
 // https://www.techiedelight.com/dynamically-create-drop-down-list-javascript/
 function generateCategoryDropdown(addingTodo = false) {
-  // https://stackoverflow.com/a/35092559
   let categories = todo.getCategories();
 
   if (!addingTodo) {
@@ -95,43 +93,35 @@ function clearTodoForm() {
   clearChildrenNodes(contentId);
 }
 
+function createLabelAppendToForm(textContent, id, form) {
+  let label = document.createElement('label');
+  label.textContent = textContent;
+  let input = document.createElement('input');
+  input.type = 'text';
+  input.id = id;
+
+  form.appendChild(label);
+  form.appendChild(input);
+  form.appendChild(document.createElement('br'));
+}
+
 function addTodoForm(editingId) {
   clearChildrenNodes(contentId);
 
   const form = document.createElement('form');
   form.id = 'add-todo-form';
 
-  let label = document.createElement('label');
-  label.textContent = 'Title';
-  let input = document.createElement('input');
-  input.type = 'text';
-  input.id = 'title';
-
-  form.appendChild(label);
-  form.appendChild(input);
-  form.appendChild(document.createElement('br'));
+  createLabelAppendToForm('Title', 'title', form);
 
   generateCategoryDropdown(true);
 
-  form.appendChild(label);
-  form.appendChild(input);
-  form.appendChild(document.createElement('br'));
-
-  label = document.createElement('label');
-  label.textContent = 'Description';
-  input = document.createElement('input');
-  input.type = 'text';
-  input.id = 'description';
-
-  form.appendChild(label);
-  form.appendChild(input);
-  form.appendChild(document.createElement('br'));
+  createLabelAppendToForm('Description', 'description', form);
 
   contentId.appendChild(form);
 
-  label = document.createElement('label');
+  let label = document.createElement('label');
   label.textContent = 'Is complete';
-  input = document.createElement('input');
+  let input = document.createElement('input');
   input.type = 'checkbox';
   input.id = 'is-complete';
 
@@ -158,7 +148,6 @@ function addTodoForm(editingId) {
 
 function addEventListeners() {
   const deleteButtons = document.querySelectorAll('.delete-button');
-
   deleteButtons.forEach(deleteButton =>
     deleteButton.addEventListener('click', e => {
       const id = e.target.id;
@@ -182,18 +171,11 @@ function addEventListeners() {
       document.querySelector('#is-complete').checked = isComplete;
       document.querySelector('#category').value = category;
       categorySelected = category;
-      // console.log(title + description + isComplete);
-      // let category = categorySelected;
-      // todo.editTodo(id);
-      // updateTodosObject();
-      // renderTodos();
     })
   );
 
   const select = document.querySelector('#category');
   select.addEventListener('change', e => {
-    // const result = document.querySelector('.result');
-    console.log(e.target.value);
     categorySelected = e.target.value;
     updateTodosObject();
     renderTodos();
@@ -214,7 +196,6 @@ function addToDoFormEventListeners(editingId) {
   const addTodoButton = document.querySelector('#add-todo');
   addTodoButton.addEventListener('click', e => {
     e.preventDefault();
-    console.log(categorySelected);
     const title = document.querySelector('#title').value;
     if (title === '') return;
     const description = document.querySelector('#description').value;
