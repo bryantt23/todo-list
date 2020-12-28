@@ -61,7 +61,11 @@ function generateCategoryDropdown(addingTodo = false) {
   let categories = todo.getCategories();
 
   if (!addingTodo) {
-    categories.unshift('all');
+    if (categories[0] !== 'all') categories.unshift('all');
+  } else {
+    categories = categories.filter(
+      category => category.toLocaleLowerCase() != 'all'
+    );
   }
 
   const select = document.createElement('select');
