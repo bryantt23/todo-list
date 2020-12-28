@@ -1,11 +1,10 @@
 import * as todo from './todos.js';
 
-// const addTodoForm = document.querySelector('#add-todo-form');
 const contentId = document.querySelector('#content');
 const todosContainer = document.createElement('div');
 todosContainer.id = 'todosContainer';
 
-let categorySelected = '';
+let categorySelected = 'all';
 let todosObj = {};
 
 function updateTodosObject() {
@@ -38,12 +37,18 @@ function renderTodos() {
     p.id = key;
     p.textContent = `Title: ${title}, Category: ${category}, Description: ${description}, Is complete: ${isComplete}`;
 
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Edit this todo';
+    editButton.id = key;
+    editButton.setAttribute('class', 'edit-button');
+
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete this todo';
     deleteButton.id = key;
     deleteButton.setAttribute('class', 'delete-button');
     todosContainer.appendChild(p);
     todosContainer.appendChild(deleteButton);
+    todosContainer.appendChild(editButton);
   }
   contentId.appendChild(todosContainer);
   addEventListeners();
@@ -169,7 +174,28 @@ function addEventListeners() {
     })
   );
 
-  // changeDropdownSelection([() => updateTodosObject, () => renderTodos]);
+  const editButtons = document.querySelectorAll('.edit-button');
+
+  editButtons.forEach(editButton =>
+    editButton.addEventListener('click', e => {
+      const id = e.target.id;
+      const todoToEdit = todosObj[id];
+      const { title, description, category, isComplete } = todoToEdit;
+      addTodoForm();
+
+      document.querySelector('#title').value = title;
+      document.querySelector('#description').value = description;
+      document.querySelector('#is-complete').checked = isComplete;
+      document.querySelector('#category').value = category;
+      categorySelected = category;
+      // console.log(title + description + isComplete);
+      // let category = categorySelected;
+      // todo.editTodo(id);
+      // updateTodosObject();
+      // renderTodos();
+    })
+  );
+
   const select = document.querySelector('#category');
   select.addEventListener('change', e => {
     // const result = document.querySelector('.result');
@@ -181,31 +207,15 @@ function addEventListeners() {
 
   const addTodoButton = document.querySelector('#add-a-todo');
   addTodoButton.addEventListener('click', () => {
-    // contentId.style = 'visibility:hidden';
-    // todosContainer.style = 'visibility:hidden';
-    // addTodoForm.style = 'visibility:visible';
     addTodoForm();
   });
 }
-
-// function changeDropdownSelection(callbackFunctions) {
-//   const select = document.querySelector('#category');
-//   select.addEventListener('change', e => {
-//     categorySelected = e.target.value;
-//   });
-//   console.log(callbackFunctions);
-//   for (const fn of callbackFunctions) {
-//     fn();
-//   }
-// }
 
 function addToDoFormEventListeners() {
   const select = document.querySelector('#category');
   select.addEventListener('change', e => {
     categorySelected = e.target.value;
   });
-
-  // changeDropdownSelection();
 
   const addTodoButton = document.querySelector('#add-todo');
   addTodoButton.addEventListener('click', e => {
@@ -219,19 +229,15 @@ function addToDoFormEventListeners() {
     console.log(title + description + isComplete);
     let category = categorySelected;
     todo.createTodo({ title, isComplete, category, description });
-
+    categorySelected = 'all';
     clearTodoForm();
     showAllTodos();
-    // const author = document.querySelector('#author').value;
-    // if (title !== '' && author !== '') {
-    //   addBookToLibrary(new Book(title, author));
-    //   showBooksOnPage();
-    // }
   });
 
   const cancelAddingTodo = document.querySelector('#cancel-adding-new-todo');
   cancelAddingTodo.addEventListener('click', e => {
     e.preventDefault();
+    categorySelected = 'all';
     clearTodoForm();
     showAllTodos();
   });
